@@ -1,0 +1,6 @@
+framework module JLXXNetWorking {
+  umbrella header "JLXXNetWorking-umbrella.h"
+
+  export *
+  module * { export * }
+}

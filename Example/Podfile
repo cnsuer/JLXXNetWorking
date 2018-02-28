@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'JLXXNetWorking_Example' do
+  pod 'JLXXNetWorking', :path => '../'
+
+  target 'JLXXNetWorking_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
