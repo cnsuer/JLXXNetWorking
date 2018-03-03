@@ -60,6 +60,8 @@
 -(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray{
     if (self) {
         _requestArray = [requestArray copy];
+		_successRequestArray = [NSMutableArray array];
+		_failedRequestArray = [NSMutableArray array];
         _finishedCount = 0;
         for (JLXXRequest * request in _requestArray) {
             if (![request isKindOfClass:[JLXXRequest class]]) {
@@ -82,7 +84,7 @@
 #endif
         return;
     }
-    _failedRequest = nil;
+    _failedRequestArray = nil;
     [[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
     for (JLXXRequest * request in _requestArray) {
         request.delegate = self;
@@ -125,6 +127,7 @@
 - (void)requestFinished:(__kindof JLXXRequest *)request{
     @synchronized(self) {
         _finishedCount++;
+		[_successRequestArray addObject:request];
     }
     if (_finishedCount == _requestArray.count) {
 
@@ -140,6 +143,7 @@
 - (void)requestFailed:(JLXXRequest *)request {
     @synchronized(self) {
         _finishedCount++;
+		[_failedRequestArray addObject:request];
     }
     if (_finishedCount == _requestArray.count) {
         // Callback

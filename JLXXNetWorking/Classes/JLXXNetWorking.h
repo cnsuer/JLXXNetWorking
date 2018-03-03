@@ -10,5 +10,7 @@
 
 #import "JLXXRequest.h"
 #import "JLXXRequestConfig.h"
+#import "JLXXBatchRequest.h"
+#import "JLXXChainRequest.h"
 
 #endif /* JLXXNetWorking_h */

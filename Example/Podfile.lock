@@ -14,7 +14,7 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - JLXXNetWorking (1.0.0):
+  - JLXXNetWorking (1.1.0):
     - AFNetworking
 
 DEPENDENCIES:
@@ -26,7 +26,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  JLXXNetWorking: 3086e6f736d2aec0bd37ec5d4bd538caa5eb12ad
+  JLXXNetWorking: 977a8acae7bb08a41e71439504341f28df3f332b
 
 PODFILE CHECKSUM: 19f24e109e955384b9ebb1bc9e329b7767a7a7e8
 

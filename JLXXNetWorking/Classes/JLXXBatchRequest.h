@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///  the batch requests.
 @interface JLXXBatchRequestManager : NSObject
 
-
 ///  Get the shared batch request agent.
 + (instancetype )sharedInstance;
 
@@ -36,6 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 ///  All the requests are stored in this array.
 @property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *requestArray;
 
+///  The requests that successed (and causing the batch request to sucess).
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *successRequestArray;
+
+///  The requests request that failed (and causing the batch request to fail).
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *failedRequestArray;
+
 ///  The success callback. Note this will be called only if all the requests are finished.
 ///  This block will be called on the main queue.
 @property (nonatomic, copy, nullable) void (^successCompletionBlock)(JLXXBatchRequest *);
@@ -43,12 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 ///  The failure callback. Note this will be called if one of the requests fails.
 ///  This block will be called on the main queue.
 @property (nonatomic, copy, nullable) void (^failureCompletionBlock)(JLXXBatchRequest *);
-
-///  Tag can be used to identify batch request. Default value is 0.
-@property (nonatomic) NSInteger tag;
-
-///  The first request that failed (and causing the batch request to fail).
-@property (nonatomic, strong, readonly, nullable) JLXXRequest *failedRequest;
 
 ///  Creates a `JLXXBatchRequest` with a bunch of requests.
 ///
