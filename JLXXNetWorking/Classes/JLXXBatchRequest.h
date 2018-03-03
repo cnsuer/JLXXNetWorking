@@ -36,10 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *requestArray;
 
 ///  The requests that successed (and causing the batch request to sucess).
-@property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *successRequestArray;
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *successRequests;
 
 ///  The requests request that failed (and causing the batch request to fail).
-@property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *failedRequestArray;
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *failedRequests;
 
 ///  The success callback. Note this will be called only if all the requests are finished.
 ///  This block will be called on the main queue.
@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///  Nil out both success and failure callback blocks.
 - (void)clearCompletionBlock;
+
+
+- (BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray;
 
 @end
 

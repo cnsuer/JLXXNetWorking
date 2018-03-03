@@ -60,8 +60,6 @@
 -(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray{
     if (self) {
         _requestArray = [requestArray copy];
-		_successRequestArray = [NSMutableArray array];
-		_failedRequestArray = [NSMutableArray array];
         _finishedCount = 0;
         for (JLXXRequest * request in _requestArray) {
             if (![request isKindOfClass:[JLXXRequest class]]) {
@@ -84,8 +82,10 @@
 #endif
         return;
     }
-    _failedRequestArray = nil;
-    [[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
+	_successRequests = [NSMutableArray array];
+	_failedRequests = [NSMutableArray array];
+	
+	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
     for (JLXXRequest * request in _requestArray) {
         request.delegate = self;
         [request clearCompletionBlock];
@@ -122,12 +122,19 @@
     self.failureCompletionBlock = nil;
 }
 
+-(BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray{
+	BOOL isIn = NO;
+	for (JLXXRequest *re in requestArray) {
+		if ([request isEqual:re]) { isIn = YES; break; }
+	}
+	return isIn;
+}
 #pragma mark - Network Request Delegate
 
 - (void)requestFinished:(__kindof JLXXRequest *)request{
     @synchronized(self) {
         _finishedCount++;
-		[_successRequestArray addObject:request];
+		[_successRequests addObject:request];
     }
     if (_finishedCount == _requestArray.count) {
 
@@ -143,7 +150,7 @@
 - (void)requestFailed:(JLXXRequest *)request {
     @synchronized(self) {
         _finishedCount++;
-		[_failedRequestArray addObject:request];
+		[_failedRequests addObject:request];
     }
     if (_finishedCount == _requestArray.count) {
         // Callback

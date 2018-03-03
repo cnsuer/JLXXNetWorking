@@ -29,10 +29,12 @@
 	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithRequestArray:@[re1,re2,re3,re4]];
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
-		NSLog(@"%@",batchRequest.successRequestArray);
+		NSLog(@"%@",batchRequest.successRequests);
 	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		
-		NSLog(@"%@",batchRequest.failedRequestArray);
+		if ([batchRequest request:re2 inRequestArray:batchRequest.failedRequests]) {
+			NSLog(@"re2.requestUrl  %@",re2.requestUrl);
+		}
 		
 	}];
 }
