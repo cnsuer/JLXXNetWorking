@@ -74,6 +74,24 @@
     return self;
 }
 
+-(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray sometimeRequests:(nonnull NSArray<JLXXRequest *> *)sometimeRequests{
+	if (self) {
+		_requestArray = [requestArray copy];
+		_sometimeRequests = [sometimeRequests copy];
+		_finishedCount = 0;
+		for (JLXXRequest * request in _requestArray) {
+			if (![request isKindOfClass:[JLXXRequest class]]) {
+#ifdef DEBUG
+				NSLog(@"Error, request item must be JLXXRequest instance.");
+#else
+#endif
+				return nil;
+			}
+		}
+	}
+	return self;
+}
+
 - (void)start {
     if (_finishedCount > 0) {
 #ifdef DEBUG
@@ -87,6 +105,12 @@
 	
 	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
     for (JLXXRequest * request in _requestArray) {
+		
+		//上拉加载则不执行此网络请求
+		if (!self.isRefresh && [_sometimeRequests containsObject:request]) {
+			break;
+		}
+		
         request.delegate = self;
         [request clearCompletionBlock];
         [request start];

@@ -109,6 +109,8 @@
 	}else{
 		param = [param mutableCopy];
 	}
+	//extra 参数
+	[param setValuesForKeysWithDictionary:request.extraParam];
 	//添加默认参数
 	[param setValuesForKeysWithDictionary:_config.defaultParam];
 	//需要忽略的参数

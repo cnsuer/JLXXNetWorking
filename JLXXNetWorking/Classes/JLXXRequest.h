@@ -209,7 +209,8 @@ NS_ENUM(NSInteger) {
 
 ///  Additional request argument.
 @property (nonatomic , strong) id requestParam;
-
+///extraParam
+@property (nonatomic , strong) id extraParam;
 /// ignore paramKeys in requestParam
 - (nullable NSArray<NSString *> *)ignoreParams;
 ///  The priority of the request. Effective only on iOS 8+. Default is `JLXXRequestPriorityDefault`.

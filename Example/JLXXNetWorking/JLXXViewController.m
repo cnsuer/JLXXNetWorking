@@ -26,7 +26,8 @@
 	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"api/33"];
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"api/44"];
 
-	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithRequestArray:@[re1,re2,re3,re4]];
+	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithRequestArray:@[re1,re2,re3,re4] sometimeRequests:@[re4]];
+	batch.isRefresh = YES;
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		NSLog(@"%@",batchRequest.successRequests);

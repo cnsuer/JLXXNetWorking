@@ -35,6 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 ///  All the requests are stored in this array.
 @property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *requestArray;
 
+///  这里常见于一个页面有多个网络请求,下拉刷新的时候全部请求,加载更多的时候,只加载某一个或几个请求.
+///  所以sometimesRequests里的request,在上拉加载时,不会请求
+@property (nonatomic , assign) BOOL isRefresh;
+@property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *sometimeRequests;
+
 ///  The requests that successed (and causing the batch request to sucess).
 @property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *successRequests;
 
@@ -54,6 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///  @param requestArray requests useds to create batch request.
 ///
 - (instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray;
+- (instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray sometimeRequests:(NSArray<JLXXRequest *> *)sometimeRequests;
 
 ///  Convenience method to start the batch request with block callbacks.
 - (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JLXXBatchRequest *batchRequest))success
