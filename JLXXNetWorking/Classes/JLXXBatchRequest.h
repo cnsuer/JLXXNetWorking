@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///  @param requestArray requests useds to create batch request.
 ///
 - (instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray;
-- (instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray sometimeRequests:(NSArray<JLXXRequest *> *)sometimeRequests;
+- (instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests sometimeRequests:(NSArray<JLXXRequest *> *)alwaysRequests;
 
 ///  Convenience method to start the batch request with block callbacks.
 - (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JLXXBatchRequest *batchRequest))success

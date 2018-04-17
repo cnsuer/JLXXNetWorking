@@ -20,13 +20,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-	
-	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"api/11"];
-	JLXXRequest *re2 = [[JLXXRequest alloc] initWithRequestUrl:@"api/22"];
-	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"api/33"];
-	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"api/44"];
 
-	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithRequestArray:@[re1,re2,re3,re4] sometimeRequests:@[re4]];
+}
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+	
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/11"];
+	JLXXRequest *re2 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/22"];
+	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/33"];
+	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];
+	
+	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] sometimeRequests:@[re1]];
 	batch.isRefresh = YES;
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
@@ -38,7 +42,9 @@
 		}
 		
 	}];
+	
 }
+
 
 - (void)didReceiveMemoryWarning
 {

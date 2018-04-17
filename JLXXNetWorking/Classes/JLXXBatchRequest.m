@@ -58,7 +58,7 @@
 @implementation JLXXBatchRequest
 
 -(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray{
-    if (self) {
+    if (self = [super init]) {
         _requestArray = [requestArray copy];
         _finishedCount = 0;
         for (JLXXRequest * request in _requestArray) {
@@ -74,10 +74,15 @@
     return self;
 }
 
--(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray sometimeRequests:(nonnull NSArray<JLXXRequest *> *)sometimeRequests{
-	if (self) {
-		_requestArray = [requestArray copy];
+-(instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests sometimeRequests:(nonnull NSArray<JLXXRequest *> *)sometimeRequests{
+	if (self = [super init]) {
+		
 		_sometimeRequests = [sometimeRequests copy];
+		
+		NSMutableArray *requests = [alwaysRequests mutableCopy];
+		[requests addObjectsFromArray:sometimeRequests];
+		_requestArray = [requests copy];
+		
 		_finishedCount = 0;
 		for (JLXXRequest * request in _requestArray) {
 			if (![request isKindOfClass:[JLXXRequest class]]) {
@@ -102,10 +107,9 @@
     }
 	_successRequests = [NSMutableArray array];
 	_failedRequests = [NSMutableArray array];
-	
+
 	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
     for (JLXXRequest * request in _requestArray) {
-		
 		//上拉加载则不执行此网络请求
 		if (!self.isRefresh && [_sometimeRequests containsObject:request]) {
 			break;
