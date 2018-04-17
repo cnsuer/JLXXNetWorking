@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface JLXXBatchRequest : NSObject
 
 ///  All the requests are stored in this array.
-@property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *requestArray;
+@property (nonatomic, strong, readonly) NSMutableArray<JLXXRequest *> *requestArray;
 
 ///  这里常见于一个页面有多个网络请求,下拉刷新的时候全部请求,加载更多的时候,只加载某一个或几个请求.
 ///  所以sometimesRequests里的request,在上拉加载时,不会请求

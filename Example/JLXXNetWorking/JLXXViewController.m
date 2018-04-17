@@ -12,6 +12,8 @@
 
 @interface JLXXViewController ()
 
+@property (nonatomic , assign) BOOL isRefresh;
+
 @end
 
 @implementation JLXXViewController
@@ -25,31 +27,29 @@
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 	
+	[self batch];
+	
+}
+
+-(void)batch{
+	self.isRefresh = !self.isRefresh;
+
+	
 	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/11"];
 	JLXXRequest *re2 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/22"];
 	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/33"];
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];
 	
 	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] sometimeRequests:@[re1]];
-	batch.isRefresh = YES;
+	batch.isRefresh = self.isRefresh;
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		NSLog(@"%@",batchRequest.successRequests);
 	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
-		
-		if ([batchRequest request:re2 inRequestArray:batchRequest.failedRequests]) {
-			NSLog(@"re2.requestUrl  %@",re2.requestUrl);
-		}
-		
+		NSLog(@"%@",batchRequest.failedRequests);
 	}];
-	
 }
 
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 @end

@@ -18,33 +18,33 @@
 @implementation JLXXBatchRequestManager
 
 +(instancetype)sharedInstance{
-    
-    static id sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
-    });
-    return sharedInstance;
+	
+	static id sharedInstance = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedInstance = [[self alloc] init];
+	});
+	return sharedInstance;
 }
 
 - (instancetype)init {
-    self = [super init];
-    if (self) {
-        _requestArray = [NSMutableArray array];
-    }
-    return self;
+	self = [super init];
+	if (self) {
+		_requestArray = [NSMutableArray array];
+	}
+	return self;
 }
 
 - (void)addBatchRequest:(JLXXBatchRequest *)request {
-    @synchronized(self) {
-        [_requestArray addObject:request];
-    }
+	@synchronized(self) {
+		[_requestArray addObject:request];
+	}
 }
 
 - (void)removeBatchRequest:(JLXXBatchRequest *)request {
-    @synchronized(self) {
-        [_requestArray removeObject:request];
-    }
+	@synchronized(self) {
+		[_requestArray removeObject:request];
+	}
 }
 
 @end
@@ -58,20 +58,20 @@
 @implementation JLXXBatchRequest
 
 -(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray{
-    if (self = [super init]) {
-        _requestArray = [requestArray copy];
-        _finishedCount = 0;
-        for (JLXXRequest * request in _requestArray) {
-            if (![request isKindOfClass:[JLXXRequest class]]) {
+	if (self = [super init]) {
+		_requestArray = [requestArray mutableCopy];
+		_finishedCount = 0;
+		for (JLXXRequest * request in _requestArray) {
+			if (![request isKindOfClass:[JLXXRequest class]]) {
 #ifdef DEBUG
-                NSLog(@"Error, request item must be JLXXRequest instance.");
+				NSLog(@"Error, request item must be JLXXRequest instance.");
 #else
 #endif
-                return nil;
-            }
-        }
-    }
-    return self;
+				return nil;
+			}
+		}
+	}
+	return self;
 }
 
 -(instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests sometimeRequests:(nonnull NSArray<JLXXRequest *> *)sometimeRequests{
@@ -79,9 +79,8 @@
 		
 		_sometimeRequests = [sometimeRequests copy];
 		
-		NSMutableArray *requests = [alwaysRequests mutableCopy];
-		[requests addObjectsFromArray:sometimeRequests];
-		_requestArray = [requests copy];
+		_requestArray = [alwaysRequests mutableCopy];
+		[_requestArray addObjectsFromArray:sometimeRequests];
 		
 		_finishedCount = 0;
 		for (JLXXRequest * request in _requestArray) {
@@ -98,56 +97,62 @@
 }
 
 - (void)start {
-    if (_finishedCount > 0) {
+	if (_finishedCount > 0) {
 #ifdef DEBUG
-        NSLog(@"Error! Batch request has already started.");
+		NSLog(@"Error! Batch request has already started.");
 #else
 #endif
-        return;
-    }
+		return;
+	}
 	_successRequests = [NSMutableArray array];
 	_failedRequests = [NSMutableArray array];
-
+	
 	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
-    for (JLXXRequest * request in _requestArray) {
-		//上拉加载则不执行此网络请求
-		if (!self.isRefresh && [_sometimeRequests containsObject:request]) {
-			break;
-		}
-		
-        request.delegate = self;
-        [request clearCompletionBlock];
-        [request start];
-    }
+	
+	//上拉加载,且sometimeRequests有值
+	if (!self.isRefresh && _sometimeRequests.count>0) {
+		[_requestArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(JLXXRequest * _Nonnull request, NSUInteger idx, BOOL * _Nonnull stop) {
+			//需要删除不执行的requests
+			if ([_sometimeRequests containsObject:request]) {
+				[_requestArray removeObject:request];
+			}
+		}];
+	}
+	
+	for (JLXXRequest * request in _requestArray) {
+		request.delegate = self;
+		[request clearCompletionBlock];
+		[request start];
+	}
 }
 
 - (void)startWithCompletionBlockWithSuccess:(void (^)(JLXXBatchRequest *batchRequest))success
-                                    failure:(void (^)(JLXXBatchRequest *batchRequest))failure {
-    [self setCompletionBlockWithSuccess:success failure:failure];
-    [self start];
+									failure:(void (^)(JLXXBatchRequest *batchRequest))failure {
+	[self setCompletionBlockWithSuccess:success failure:failure];
+	[self start];
 }
 
 - (void)setCompletionBlockWithSuccess:(void (^)(JLXXBatchRequest *batchRequest))success
-                              failure:(void (^)(JLXXBatchRequest *batchRequest))failure {
-    self.successCompletionBlock = success;
-    self.failureCompletionBlock = failure;
+							  failure:(void (^)(JLXXBatchRequest *batchRequest))failure {
+	self.successCompletionBlock = success;
+	self.failureCompletionBlock = failure;
 }
 - (void)stop {
-    [self clearRequest];
-    [[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
+	[self clearRequest];
+	[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
 }
 
 - (void)clearRequest {
-    for (JLXXRequest * request in _requestArray) {
-        [request stop];
-    }
-    [self clearCompletionBlock];
+	for (JLXXRequest * request in _requestArray) {
+		[request stop];
+	}
+	[self clearCompletionBlock];
 }
 
 - (void)clearCompletionBlock {
-    // nil out to break the retain cycle.
-    self.successCompletionBlock = nil;
-    self.failureCompletionBlock = nil;
+	// nil out to break the retain cycle.
+	self.successCompletionBlock = nil;
+	self.failureCompletionBlock = nil;
 }
 
 -(BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray{
@@ -160,39 +165,40 @@
 #pragma mark - Network Request Delegate
 
 - (void)requestFinished:(__kindof JLXXRequest *)request{
-    @synchronized(self) {
-        _finishedCount++;
+	@synchronized(self) {
+		_finishedCount++;
 		[_successRequests addObject:request];
-    }
-    if (_finishedCount == _requestArray.count) {
-
-        if (_successCompletionBlock) {
-            _successCompletionBlock(self);
-        }
-        // Clear
-        [self clearCompletionBlock];
-        [[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
-    }
+	}
+	if (_finishedCount == _requestArray.count) {
+		
+		if (_successCompletionBlock) {
+			_successCompletionBlock(self);
+		}
+		// Clear
+		[self clearCompletionBlock];
+		[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
+	}
 }
 
 - (void)requestFailed:(JLXXRequest *)request {
-    @synchronized(self) {
-        _finishedCount++;
+	@synchronized(self) {
+		_finishedCount++;
 		[_failedRequests addObject:request];
-    }
-    if (_finishedCount == _requestArray.count) {
-        // Callback
-        if (_failureCompletionBlock) {
-            _failureCompletionBlock(self);
-        }
-        // Clear
-        [self clearCompletionBlock];
-        [[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
-    }
+	}
+	if (_finishedCount == _requestArray.count) {
+		// Callback
+		if (_failureCompletionBlock) {
+			_failureCompletionBlock(self);
+		}
+		// Clear
+		[self clearCompletionBlock];
+		[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
+	}
 }
 
 - (void)dealloc {
-    [self clearRequest];
+	[self clearRequest];
 }
 
 @end
+
