@@ -27,15 +27,35 @@
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 	
-	[self batch];
+	[self request];
 	
 }
 
--(void)batch{
+- (void)request{
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
+	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
+		NSLog(@"success");
+	} failure:^(__kindof JLXXRequest * _Nonnull request) {
+		NSLog(@"faile");
+	}];
+}
+
+- (void)customRequestConfigCodeKey{
+	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"res_code";
+	[[JLXXRequestConfig sharedInstance] appendDefaultParam:@{@"token":@"123"}];
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/PersonalCenter"];
+	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
+		NSLog(@"success");
+	} failure:^(__kindof JLXXRequest * _Nonnull request) {
+		NSLog(@"faile");
+	}];
+}
+
+- (void)batch{
 	self.isRefresh = !self.isRefresh;
 
 	
-	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/11"];
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
 	JLXXRequest *re2 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/22"];
 	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/33"];
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];

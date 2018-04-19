@@ -110,9 +110,6 @@ NS_ENUM(NSInteger) {
 ///  Shortcut for `requestTask.response`.
 @property (nonatomic, strong, readonly) NSHTTPURLResponse *response;
 
-///  The response status code.
-@property (nonatomic, readonly) NSInteger responseStatusCode;
-
 ///  The response header fields.
 @property (nonatomic, strong, readonly, nullable) NSDictionary *responseHeaders;
 
@@ -247,6 +244,19 @@ NS_ENUM(NSInteger) {
  The acceptable MIME types for responses. When non-`nil`, responses with a `Content-Type` with MIME types that do not intersect with the set will result in an error during validation.
  */
 - (NSSet <NSString *> *)acceptableContentTypes;
+
+/**
+ 网络请求成功的状态码
+ */
+- (NSArray *)successStatusCode;
+/**
+ 服务器响应数据的状态码的key ==>例如 code = 200 中的 code
+ 默认是code
+ */
+@property (nonatomic , copy) NSString *responseStatusCodeKey;
+
+///  The response status code.
+@property (nonatomic, readonly) NSString *responseStatusCode;
 
 ///  This validator will be used to test if `responseStatusCode` is valid.
 - (BOOL)statusCodeValidator;

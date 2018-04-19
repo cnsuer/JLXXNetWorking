@@ -121,16 +121,29 @@ NSString *const JLXXRequestValidationErrorDomain = @"com.deerlive.request.valida
 	return (NSHTTPURLResponse *)self.requestTask.response;
 }
 
-- (NSInteger)responseStatusCode {
-	return [self.responseObject[@"code"] integerValue];
+-(NSArray *)successStatusCode{
+	return @[@"P001",@"200"];
 }
--(NSDictionary *)responseHeaders{
-	return self.response.allHeaderFields;
+- (NSString *)responseStatusCode{
+	id statusCode = self.responseObject[self.responseStatusCodeKey];
+	statusCode = [NSString stringWithFormat:@"%@",statusCode];
+	return statusCode;
 }
 
 - (BOOL)statusCodeValidator {
-	NSInteger statusCode = [self responseStatusCode];
-	return (statusCode >= 200 && statusCode <= 299);
+	NSString *statusCode = [self responseStatusCode];
+	NSArray *successStatusCode = [self successStatusCode];
+	
+	BOOL status = NO;
+	for (NSString *code in successStatusCode) {
+		if ([statusCode isEqualToString:code]) { status = YES; break; }
+	}
+	
+	return status;
+}
+
+-(NSDictionary *)responseHeaders{
+	return self.response.allHeaderFields;
 }
 
 -(BOOL)jsonValidator{

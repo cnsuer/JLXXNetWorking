@@ -58,6 +58,15 @@ FOUNDATION_EXPORT NSString * const JLXXNetworkingReachabilityNotificationStatusI
  */
 @property (nonatomic, strong, readonly) dispatch_queue_t processingQueue;
 /**
+ 服务器响应数据的状态码的key ==>例如 code = 200 中的 code
+ 默认是code
+ */
+@property (nonatomic , copy) NSString *responseStatusCodeKey;
+/**
+ 网络请求成功的状态码
+ */
+@property (nonatomic , strong) NSArray * successStatusCode;
+/**
  是否加密
  */
 @property (nonatomic , assign) BOOL isSecret;
