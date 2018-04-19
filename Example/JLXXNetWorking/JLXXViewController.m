@@ -42,8 +42,7 @@
 
 - (void)customRequestConfigCodeKey{
 	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"res_code";
-	[[JLXXRequestConfig sharedInstance] appendDefaultParam:@{@"token":@"123"}];
-	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/PersonalCenter"];
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/shangjia"];
 	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
 		NSLog(@"success");
 	} failure:^(__kindof JLXXRequest * _Nonnull request) {

@@ -5,42 +5,44 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: cocoapods" time="2.580231">
+      <testcase classname="fastlane.lanes" name="0: cocoapods" time="12.391895">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: git_add" time="0.042038">
+      <testcase classname="fastlane.lanes" name="1: git_add" time="0.050365">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: git_commit" time="0.044322">
+      <testcase classname="fastlane.lanes" name="2: git_commit" time="0.043576">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: push_to_git_remote" time="13.71746">
+      <testcase classname="fastlane.lanes" name="3: push_to_git_remote" time="9.33055">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: git_tag_exists" time="0.014721">
+      <testcase classname="fastlane.lanes" name="4: git_tag_exists" time="0.013543">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: add_git_tag" time="0.027543">
+      <testcase classname="fastlane.lanes" name="5: add_git_tag" time="0.019939">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: push_git_tags" time="9.223335">
+      <testcase classname="fastlane.lanes" name="6: push_git_tags" time="8.139359">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: pod_push" time="217.470122">
+      <testcase classname="fastlane.lanes" name="7: pod_push" time="332.513525">
+        
+          <failure message="/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/actions/actions_helper.rb:48:in `execute_action'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:231:in `block in execute_action'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:227:in `chdir'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:227:in `execute_action'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:148:in `trigger_action_by_name'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/fast_file.rb:146:in `method_missing'&#10;Fastfile:54:in `block in parsing_binding'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/lane.rb:33:in `call'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/lane.rb:33:in `call'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/lane_manager.rb:54:in `cruise_lane'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/command_line_handler.rb:30:in `handle'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/commands_generator.rb:104:in `block (2 levels) in run'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/commander-fastlane-4.4.5/lib/commander/command.rb:178:in `call'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/commander-fastlane-4.4.5/lib/commander/command.rb:178:in `call'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/commander-fastlane-4.4.5/lib/commander/command.rb:153:in `run'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/commander-fastlane-4.4.5/lib/commander/runner.rb:476:in `run_active_command'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:66:in `run!'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/commander-fastlane-4.4.5/lib/commander/delegates.rb:15:in `run!'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/commands_generator.rb:303:in `run'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/commands_generator.rb:42:in `start'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/fastlane/lib/fastlane/cli_tools_distributor.rb:66:in `take_off'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/gems/fastlane-2.64.0/bin/fastlane:20:in `&lt;top (required)&gt;'&#10;/Users/apple/.rvm/rubies/ruby-2.2.3/bin/fastlane:23:in `load'&#10;/Users/apple/.rvm/rubies/ruby-2.2.3/bin/fastlane:23:in `&lt;main&gt;'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/bin/ruby_executable_hooks:15:in `eval'&#10;/Users/apple/.rvm/gems/ruby-2.2.3@global/bin/ruby_executable_hooks:15:in `&lt;main&gt;'&#10;&#10;Exit status of command 'pod trunk push 'JLXXNetWorking.podspec' --allow-warnings' was 1 instead of 0.&#10;Updating spec repo `master`&#10;[!] CocoaPods was not able to update the `master` repo. If this is an unexpected issue and persists you can inspect it running `pod repo update --verbose`&#10;" />
         
       </testcase>
     
