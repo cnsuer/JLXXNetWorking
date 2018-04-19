@@ -32,7 +32,7 @@
 }
 
 - (void)request{
-	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/shangjia"];
 	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
 		NSLog(@"success");
 	} failure:^(__kindof JLXXRequest * _Nonnull request) {
@@ -41,8 +41,8 @@
 }
 
 - (void)customRequestConfigCodeKey{
-	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"res_code";
-	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/shangjia"];
+	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"code";
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
 	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
 		NSLog(@"success");
 	} failure:^(__kindof JLXXRequest * _Nonnull request) {

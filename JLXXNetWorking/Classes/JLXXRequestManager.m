@@ -339,7 +339,8 @@
 	BOOL result = [request statusCodeValidator];
 	if (!result) {
 		if (error) {
-			NSString *localizedErrorString = request.responseObject[@"descrp"];
+			NSString * des = [JLXXRequestConfig sharedInstance].responseDescriptionKey;
+			NSString *localizedErrorString = request.responseObject[des];
 			if (localizedErrorString) {
 				*error = [NSError errorWithDomain:JLXXRequestValidationErrorDomain code:JLXXRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:localizedErrorString}];
 			}

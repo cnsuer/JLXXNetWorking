@@ -66,6 +66,12 @@ FOUNDATION_EXPORT NSString * const JLXXNetworkingReachabilityNotificationStatusI
  网络请求成功的状态码
  */
 @property (nonatomic , strong) NSArray * successStatusCode;
+
+/**
+ 网络请求结束的描述信息key
+ */
+@property (nonatomic , copy) NSString *responseDescriptionKey;
+
 /**
  是否加密
  */

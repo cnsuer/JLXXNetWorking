@@ -35,7 +35,8 @@ NSString * const JLXXNetworkingReachabilityNotificationStatusItem = @"JLXXNetwor
 	self = [super init];
 	if (self) {
 		_baseURL = @"http://kuailai.deerlive.com";
-		_responseStatusCodeKey = @"code";
+		_responseStatusCodeKey = @"res_code";
+		_responseDescriptionKey = @"res_msg";
 		_successStatusCode = @[@"P001",@"200"];
 		_securityPolicy = [AFSecurityPolicy defaultPolicy];
 		_networkStatus = JLXXNetworkReachabilityStatusUnknown;

@@ -165,11 +165,30 @@
 #pragma mark - Network Request Delegate
 
 - (void)requestFinished:(__kindof JLXXRequest *)request{
-	@synchronized(self) {
-		_finishedCount++;
+	dispatch_async(dispatch_get_main_queue(), ^{
 		[_successRequests addObject:request];
-	}
-	if (_finishedCount == _requestArray.count) {
+		self.finishedCount++;
+	});
+}
+
+- (void)requestFailed:(JLXXRequest *)request {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[_failedRequests addObject:request];
+		self.finishedCount++;
+	});
+}
+
+-(void)setFinishedCount:(NSInteger)finishedCount{
+	_finishedCount = finishedCount;
+	
+	if (_finishedCount != _requestArray.count){ return ;}
+	
+	if(_failedRequests.count  == _finishedCount) {
+		// Callback
+		if (_failureCompletionBlock) {
+			_failureCompletionBlock(self);
+		}
+	}else if (_finishedCount == _requestArray.count) {
 		
 		if (_successCompletionBlock) {
 			_successCompletionBlock(self);
@@ -178,24 +197,10 @@
 		[self clearCompletionBlock];
 		[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
 	}
+	// Clear
+	[self clearCompletionBlock];
+	[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
 }
-
-- (void)requestFailed:(JLXXRequest *)request {
-	@synchronized(self) {
-		_finishedCount++;
-		[_failedRequests addObject:request];
-	}
-	if (_finishedCount == _requestArray.count) {
-		// Callback
-		if (_failureCompletionBlock) {
-			_failureCompletionBlock(self);
-		}
-		// Clear
-		[self clearCompletionBlock];
-		[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
-	}
-}
-
 - (void)dealloc {
 	[self clearRequest];
 }
