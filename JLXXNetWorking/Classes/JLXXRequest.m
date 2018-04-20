@@ -193,7 +193,7 @@ NSString *const JLXXRequestValidationErrorDomain = @"com.deerlive.request.valida
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ } {status code = %ld} ,{error = %@}", NSStringFromClass([self class]), self, self.currentRequest.URL, self.currentRequest.HTTPMethod, self.requestParam,self.responseStatusCode,self.error.localizedDescription];
+	return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ } {status code = %@} ,{error = %@}", NSStringFromClass([self class]), self, self.currentRequest.URL, self.currentRequest.HTTPMethod, self.requestParam,self.responseStatusCode,self.error.localizedDescription];
 }
 
 -(void)dealloc{
