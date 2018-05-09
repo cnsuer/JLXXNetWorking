@@ -9,6 +9,11 @@
 #import "JLXXBatchRequest.h"
 #import "JLXXRequest.h"
 
+#import <pthread/pthread.h>
+
+#define BatchRequestLock() pthread_mutex_lock(&_lock)
+#define BatchRequestUnlock() pthread_mutex_unlock(&_lock)
+
 @interface JLXXBatchRequestManager ()
 
 @property (strong, nonatomic) NSMutableArray<JLXXBatchRequest *> *requestArray;
@@ -55,7 +60,9 @@
 
 @end
 
-@implementation JLXXBatchRequest
+@implementation JLXXBatchRequest{
+	pthread_mutex_t _lock;
+}
 
 -(instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray{
 	if (self = [super init]) {
@@ -106,15 +113,17 @@
 	}
 	_successRequests = [NSMutableArray array];
 	_failedRequests = [NSMutableArray array];
+	pthread_mutex_init(&_lock, NULL);
 	
 	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
 	
-	//上拉加载,且sometimeRequests有值
-	if (!self.isRefresh && _sometimeRequests.count>0) {
+	//isSometime(常见于上拉加载),且sometimeRequests有值
+	if (self.isSometime && _sometimeRequests.count>0) {
+		__weak typeof(self) ws = self; //为了消除警告
 		[_requestArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(JLXXRequest * _Nonnull request, NSUInteger idx, BOOL * _Nonnull stop) {
 			//需要删除不执行的requests
-			if ([_sometimeRequests containsObject:request]) {
-				[_requestArray removeObject:request];
+			if ([ws.sometimeRequests containsObject:request]) {
+				[ws.requestArray removeObject:request];
 			}
 		}];
 	}
@@ -138,21 +147,37 @@
 	self.failureCompletionBlock = failure;
 }
 - (void)stop {
-	[self clearRequest];
-	[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
-}
-
-- (void)clearRequest {
 	for (JLXXRequest * request in _requestArray) {
 		[request stop];
 	}
+	
 	[self clearCompletionBlock];
+	
+	[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
 }
 
 - (void)clearCompletionBlock {
 	// nil out to break the retain cycle.
 	self.successCompletionBlock = nil;
 	self.failureCompletionBlock = nil;
+	
+	//clearRequest
+	_successRequests = nil;
+	_failedRequests = nil;
+	_sometimeRequests = nil;
+	_requestArray = nil;
+}
+
+-(BOOL)requestInSometimesRequestArray:(JLXXRequest *)request{
+	return [self request:request inRequestArray:_sometimeRequests];
+}
+
+-(BOOL)requestInSuccessRequestArray:(JLXXRequest *)request{
+	return [self request:request inRequestArray:_successRequests];
+}
+
+-(BOOL)requestInFailerRequestArray:(JLXXRequest *)request{
+	return [self request:request inRequestArray:_failedRequests];
 }
 
 -(BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray{
@@ -162,20 +187,21 @@
 	}
 	return isIn;
 }
+
 #pragma mark - Network Request Delegate
 
 - (void)requestFinished:(__kindof JLXXRequest *)request{
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[_successRequests addObject:request];
-		self.finishedCount++;
-	});
+	BatchRequestUnlock();
+	[_successRequests addObject:request];
+	self.finishedCount++;
+	BatchRequestLock();
 }
 
 - (void)requestFailed:(JLXXRequest *)request {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[_failedRequests addObject:request];
-		self.finishedCount++;
-	});
+	BatchRequestUnlock();
+	[_failedRequests addObject:request];
+	self.finishedCount++;
+	BatchRequestLock();
 }
 
 -(void)setFinishedCount:(NSInteger)finishedCount{
@@ -183,22 +209,34 @@
 	
 	if (_finishedCount != _requestArray.count){ return ;}
 	
+	//为什么在主队列clearCompletionBlock和removeBatchRequest?
+	//因为执行setFinishedCount这个方法的线程不是主线程所以,执行CompletionBlock与clear、remove不确定谁先执行完毕,有可能先执行clear、remove,从而导致CompletionBlock中的request为nil,造成取不到数据的错误,所以统一在主队列里执行了
+	//为什么用ws?
+	//用self没问题,但是用ws更加没有问题........就酱
+	__weak typeof(self) ws = self;
 	if(_failedRequests.count  == _finishedCount) {
 		// Callback
-		if (_failureCompletionBlock) {
-			_failureCompletionBlock(self);
-		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (ws.failureCompletionBlock) {
+				ws.failureCompletionBlock(ws);
+			}
+		});
 	}else {
-		if (_successCompletionBlock) {
-			_successCompletionBlock(self);
-		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if (ws.successCompletionBlock) {
+				ws.successCompletionBlock(ws);
+			}
+		});
 	}
 	// Clear
-	[self clearCompletionBlock];
-	[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[ws clearCompletionBlock];
+		[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:ws];
+	});
+
 }
 - (void)dealloc {
-	[self clearRequest];
+	[self clearCompletionBlock];
 }
 
 @end

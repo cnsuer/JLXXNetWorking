@@ -27,7 +27,7 @@
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 	
-	[self request];
+	[self batch];
 	
 }
 
@@ -60,13 +60,14 @@
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];
 	
 	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] sometimeRequests:@[re1]];
-	batch.isRefresh = self.isRefresh;
+	batch.isSometime = !self.isRefresh; 
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		NSLog(@"%@",batchRequest.successRequests);
 		NSLog(@"%@",batchRequest.failedRequests);
 	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
-		NSLog(@"all Request failed");
+		NSLog(@"all Request 失败");
+		NSLog(@"%@",[NSThread currentThread]);
 	}];
 }
 

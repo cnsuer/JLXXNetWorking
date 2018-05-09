@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///  这里常见于一个页面有多个网络请求,下拉刷新的时候全部请求,加载更多的时候,只加载某一个或几个请求.
 ///  所以sometimesRequests里的request,在上拉加载时,不会请求
-@property (nonatomic , assign) BOOL isRefresh;
+@property (nonatomic , assign) BOOL isSometime;
 @property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *sometimeRequests;
 
 ///  The requests that successed (and causing the batch request to sucess).
@@ -65,14 +65,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JLXXBatchRequest *batchRequest))success
                                     failure:(nullable void (^)(JLXXBatchRequest *batchRequest))failure;
 
+- (BOOL)requestInSometimesRequestArray:(JLXXRequest *)request;
+- (BOOL)requestInSuccessRequestArray:(JLXXRequest *)request;
+- (BOOL)requestInFailerRequestArray:(JLXXRequest *)request;
+- (BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray;
+
 ///  Stop all the requests of the batch request.
 - (void)stop;
 
 ///  Nil out both success and failure callback blocks.
 - (void)clearCompletionBlock;
-
-
-- (BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray;
 
 @end
 
