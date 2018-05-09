@@ -64,8 +64,9 @@
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		NSLog(@"%@",batchRequest.successRequests);
-	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		NSLog(@"%@",batchRequest.failedRequests);
+	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
+		NSLog(@"all Request failed");
 	}];
 }
 

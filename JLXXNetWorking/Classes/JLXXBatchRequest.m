@@ -188,14 +188,10 @@
 		if (_failureCompletionBlock) {
 			_failureCompletionBlock(self);
 		}
-	}else if (_finishedCount == _requestArray.count) {
-		
+	}else {
 		if (_successCompletionBlock) {
 			_successCompletionBlock(self);
 		}
-		// Clear
-		[self clearCompletionBlock];
-		[[JLXXBatchRequestManager sharedInstance] removeBatchRequest:self];
 	}
 	// Clear
 	[self clearCompletionBlock];
