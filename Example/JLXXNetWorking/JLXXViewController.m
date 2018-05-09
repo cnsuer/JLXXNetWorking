@@ -50,6 +50,15 @@
 	}];
 }
 
+- (void)customRequestConfigDescKey{
+	[JLXXRequestConfig sharedInstance].responseDescriptionKey = @"desc";
+	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
+	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
+		NSLog(@"success");
+	} failure:^(__kindof JLXXRequest * _Nonnull request) {
+		NSLog(@"faile");
+	}];
+}
 - (void)batch{
 	self.isRefresh = !self.isRefresh;
 
