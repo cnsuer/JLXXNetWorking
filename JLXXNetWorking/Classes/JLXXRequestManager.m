@@ -327,19 +327,24 @@
 - (BOOL)validateResult:(JLXXRequest *)request error:(NSError * _Nullable __autoreleasing *)error {
 	//responseStatusCodeKey没有特殊指定
 	NSUInteger responseStatusCodeKeyLengh = [request.responseStatusCodeKey length];
-	if (!(responseStatusCodeKeyLengh>0)) {
+	if (responseStatusCodeKeyLengh == 0) {
 		request.responseStatusCodeKey = [JLXXRequestConfig sharedInstance].responseStatusCodeKey;
 	}
 	//successStatusCode没有特殊指定
 	NSArray *successStatusCode = request.successStatusCode;
 	if (successStatusCode.count == 0) {
-		request.responseStatusCodeKey = [JLXXRequestConfig sharedInstance].responseStatusCodeKey;
+		request.successStatusCode = [JLXXRequestConfig sharedInstance].successStatusCode;
+	}
+	//responseDescriptionKey没有特殊指定
+	NSUInteger responseDescriptionKeyLengh = [request.responseDescriptionKey length];
+	if (responseDescriptionKeyLengh == 0) {
+		request.responseDescriptionKey = [JLXXRequestConfig sharedInstance].responseStatusCodeKey;
 	}
 	
 	BOOL result = [request statusCodeValidator];
 	if (!result) {
 		if (error) {
-			NSString * des = [JLXXRequestConfig sharedInstance].responseDescriptionKey;
+			NSString * des = request.responseDescriptionKey;
 			NSString *localizedErrorString = request.responseObject[des];
 			if (localizedErrorString) {
 				*error = [NSError errorWithDomain:JLXXRequestValidationErrorDomain code:JLXXRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:localizedErrorString}];

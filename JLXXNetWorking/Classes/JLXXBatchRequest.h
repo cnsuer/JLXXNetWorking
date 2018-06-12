@@ -37,8 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///  这里常见于一个页面有多个网络请求,下拉刷新的时候全部请求,加载更多的时候,只加载某一个或几个请求.
 ///  所以sometimesRequests里的request,在上拉加载时,不会请求
-@property (nonatomic , assign) BOOL isSometime;
-@property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *sometimeRequests;
+@property (nonatomic , assign) BOOL isRefresh;
+@property (nonatomic, strong, readonly) NSArray<JLXXRequest *> *refreshRequests;
 
 ///  The requests that successed (and causing the batch request to sucess).
 @property (nonatomic, strong, readonly, nullable) NSMutableArray<JLXXRequest *> *successRequests;
@@ -59,13 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
 ///  @param requestArray requests useds to create batch request.
 ///
 - (instancetype)initWithRequestArray:(NSArray<JLXXRequest *> *)requestArray;
-- (instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests sometimeRequests:(NSArray<JLXXRequest *> *)alwaysRequests;
+- (instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests refreshRequests:(NSArray<JLXXRequest *> *)refreshRequests;
 
 ///  Convenience method to start the batch request with block callbacks.
 - (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JLXXBatchRequest *batchRequest))success
                                     failure:(nullable void (^)(JLXXBatchRequest *batchRequest))failure;
 
-- (BOOL)requestInSometimesRequestArray:(JLXXRequest *)request;
+- (BOOL)requestInRefreshRequestsArray:(JLXXRequest *)request;
 - (BOOL)requestInSuccessRequestArray:(JLXXRequest *)request;
 - (BOOL)requestInFailerRequestArray:(JLXXRequest *)request;
 - (BOOL)request:(JLXXRequest *)request inRequestArray:(NSArray *)requestArray;

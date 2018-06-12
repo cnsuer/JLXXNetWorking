@@ -121,9 +121,6 @@ NSString *const JLXXRequestValidationErrorDomain = @"com.deerlive.request.valida
 	return (NSHTTPURLResponse *)self.requestTask.response;
 }
 
--(NSArray *)successStatusCode{
-	return @[@"P001",@"200"];
-}
 - (NSString *)responseStatusCode{
 	id statusCode = self.responseObject[self.responseStatusCodeKey];
 	statusCode = [NSString stringWithFormat:@"%@",statusCode];

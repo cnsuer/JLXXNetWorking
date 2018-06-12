@@ -81,13 +81,13 @@
 	return self;
 }
 
--(instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests sometimeRequests:(nonnull NSArray<JLXXRequest *> *)sometimeRequests{
+-(instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests refreshRequests:(NSArray<JLXXRequest *> *)refreshRequests{
 	if (self = [super init]) {
 		
-		_sometimeRequests = [sometimeRequests copy];
+		_refreshRequests = [refreshRequests copy];
 		
 		_requestArray = [alwaysRequests mutableCopy];
-		[_requestArray addObjectsFromArray:sometimeRequests];
+		[_requestArray addObjectsFromArray:refreshRequests];
 		
 		_finishedCount = 0;
 		for (JLXXRequest * request in _requestArray) {
@@ -117,12 +117,12 @@
 	
 	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
 	
-	//isSometime(常见于上拉加载),且sometimeRequests有值
-	if (self.isSometime && _sometimeRequests.count>0) {
-		__weak typeof(self) ws = self; //为了消除警告
+	//不是Refresh,且refreshRequests有值
+	if (!self.isRefresh && _refreshRequests.count>0) {
+		__weak typeof(self) ws = self;
 		[_requestArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(JLXXRequest * _Nonnull request, NSUInteger idx, BOOL * _Nonnull stop) {
 			//需要删除不执行的requests
-			if ([ws.sometimeRequests containsObject:request]) {
+			if ([ws.refreshRequests containsObject:request]) {
 				[ws.requestArray removeObject:request];
 			}
 		}];
@@ -164,12 +164,12 @@
 	//clearRequest
 	_successRequests = nil;
 	_failedRequests = nil;
-	_sometimeRequests = nil;
+	_refreshRequests = nil;
 	_requestArray = nil;
 }
 
--(BOOL)requestInSometimesRequestArray:(JLXXRequest *)request{
-	return [self request:request inRequestArray:_sometimeRequests];
+-(BOOL)requestInRefreshRequestsArray:(JLXXRequest *)request{
+	return [self request:request inRequestArray:_refreshRequests];
 }
 
 -(BOOL)requestInSuccessRequestArray:(JLXXRequest *)request{
@@ -211,8 +211,7 @@
 	
 	//为什么在主队列clearCompletionBlock和removeBatchRequest?
 	//因为执行setFinishedCount这个方法的线程不是主线程所以,执行CompletionBlock与clear、remove不确定谁先执行完毕,有可能先执行clear、remove,从而导致CompletionBlock中的request为nil,造成取不到数据的错误,所以统一在主队列里执行了
-	//为什么用ws?
-	//用self没问题,但是用ws更加没有问题........就酱
+
 	__weak typeof(self) ws = self;
 	if(_failedRequests.count  == _finishedCount) {
 		// Callback

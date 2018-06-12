@@ -87,9 +87,9 @@ NS_ENUM(NSInteger) {
 	
 	@end
 	
-	///  JLXXRequest is the abstract class of network request. It provides many options
-	///  for constructing request. It's the base class of `JLXXRequest`.
-	@interface JLXXRequest : NSObject
+///  JLXXRequest is the abstract class of network request. It provides many options
+///  for constructing request. It's the base class of `JLXXRequest`.
+@interface JLXXRequest : NSObject
 
 #pragma mark - Task Information
 ///=============================================================================
@@ -248,12 +248,14 @@ NS_ENUM(NSInteger) {
 /**
  网络请求成功的状态码
  */
-- (NSArray *)successStatusCode;
+@property (nonatomic , copy) NSArray *successStatusCode;
 /**
  服务器响应数据的状态码的key ==>例如 code = 200 中的 code
  默认是code
  */
 @property (nonatomic , copy) NSString *responseStatusCodeKey;
+
+@property (nonatomic , copy) NSString *responseDescriptionKey;
 
 ///  The response status code.
 @property (nonatomic, readonly) NSString *responseStatusCode;

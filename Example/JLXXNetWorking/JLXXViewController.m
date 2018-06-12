@@ -27,11 +27,14 @@
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 	
-	[self batch];
+	[self request];
 	
 }
 
 - (void)request{
+	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"res_code";
+	[JLXXRequestConfig sharedInstance].responseDescriptionKey = @"res_msg";
+	[JLXXRequestConfig sharedInstance].successStatusCode = @[@"P001",@"200"];
 	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/shangjia"];
 	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
 		NSLog(@"success");
@@ -40,27 +43,25 @@
 	}];
 }
 
-- (void)customRequestConfigCodeKey{
+- (void)configCodeAndDescKey{
 	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"code";
+	[JLXXRequestConfig sharedInstance].responseDescriptionKey = @"desc";
+
 	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
 	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
 		NSLog(@"success");
 	} failure:^(__kindof JLXXRequest * _Nonnull request) {
-		NSLog(@"faile");
+		NSLog(@"faile-----%@",request.error.localizedDescription);
 	}];
 }
 
-- (void)customRequestConfigDescKey{
-	[JLXXRequestConfig sharedInstance].responseDescriptionKey = @"desc";
-	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
-	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
-		NSLog(@"success");
-	} failure:^(__kindof JLXXRequest * _Nonnull request) {
-		NSLog(@"faile");
-	}];
-}
 - (void)batch{
 	self.isRefresh = !self.isRefresh;
+	NSLog(@"self.isRefresh-----%d",self.isRefresh);
+
+
+	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"code";
+	[JLXXRequestConfig sharedInstance].responseDescriptionKey = @"desc";
 
 	
 	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
@@ -68,8 +69,8 @@
 	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/33"];
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];
 	
-	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] sometimeRequests:@[re1]];
-	batch.isSometime = !self.isRefresh; 
+	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] refreshRequests:@[re1]];
+	batch.isRefresh = self.isRefresh;
 	
 	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
 		NSLog(@"%@",batchRequest.successRequests);
