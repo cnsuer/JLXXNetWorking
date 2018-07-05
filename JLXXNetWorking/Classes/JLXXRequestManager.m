@@ -338,14 +338,14 @@
 	//responseDescriptionKey没有特殊指定
 	NSUInteger responseDescriptionKeyLengh = [request.responseDescriptionKey length];
 	if (responseDescriptionKeyLengh == 0) {
-		request.responseDescriptionKey = [JLXXRequestConfig sharedInstance].responseStatusCodeKey;
+		request.responseDescriptionKey = [JLXXRequestConfig sharedInstance].responseDescriptionKey;
 	}
 	
 	BOOL result = [request statusCodeValidator];
 	if (!result) {
 		if (error) {
 			NSString * des = request.responseDescriptionKey;
-			NSString *localizedErrorString = request.responseObject[des];
+			NSString *localizedErrorString = [NSString stringWithFormat:@"%@",request.responseObject[des]];
 			if (localizedErrorString) {
 				*error = [NSError errorWithDomain:JLXXRequestValidationErrorDomain code:JLXXRequestValidationErrorInvalidStatusCode userInfo:@{NSLocalizedDescriptionKey:localizedErrorString}];
 			}

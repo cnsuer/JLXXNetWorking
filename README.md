@@ -55,7 +55,7 @@ pod 'JLXXNetWorking'
 "res_msg": "操作成功"
 }
 ```
-此时就可以在JLXXRequestConfig,做同意的配置:
+此时就可以在JLXXRequestConfig,做统一的配置:
 
 ```objectivec
 [JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"res_code";
