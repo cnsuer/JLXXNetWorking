@@ -93,20 +93,6 @@ NSString *const JLXXRequestValidationErrorDomain = @"com.deerlive.request.valida
 	return self.requestTask.originalRequest;
 }
 
-- (BOOL)isCancelled {
-	if (!self.requestTask) {
-		return NO;
-	}
-	return self.requestTask.state == NSURLSessionTaskStateCanceling;
-}
-
-- (BOOL)isExecuting {
-	if (!self.requestTask) {
-		return NO;
-	}
-	return self.requestTask.state == NSURLSessionTaskStateRunning;
-}
-
 #pragma mark - Response Information
 
 - (JLXXResponseSerializerType)responseSerializerType {
@@ -127,6 +113,27 @@ NSString *const JLXXRequestValidationErrorDomain = @"com.deerlive.request.valida
 	return statusCode;
 }
 
+- (void)cancelRequest{
+	[self.requestTask cancel];
+}
+
+- (BOOL)isCancelled {
+	if (!self.requestTask) {
+		return NO;
+	}
+	return self.requestTask.error.code == NSURLErrorCancelled;
+}
+
+- (BOOL)isExecuting {
+	if (!self.requestTask) {
+		return NO;
+	}
+	return self.requestTask.state == NSURLSessionTaskStateRunning;
+}
+
+- (BOOL)isCallBackWhenCancel{
+	return NO;
+}
 - (BOOL)statusCodeValidator {
 	NSString *statusCode = [self responseStatusCode];
 	NSArray *successStatusCode = [self successStatusCode];

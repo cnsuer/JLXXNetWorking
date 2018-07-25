@@ -1,9 +1,7 @@
 # JLXXNetWorking
 
-[![CI Status](http://img.shields.io/travis/cnsuer/JLXXNetWorking.svg?style=flat)](https://travis-ci.org/cnsuer/JLXXNetWorking)
-[![Version](https://img.shields.io/cocoapods/v/JLXXNetWorking.svg?style=flat)](http://cocoapods.org/pods/JLXXNetWorking)
-[![License](https://img.shields.io/cocoapods/l/JLXXNetWorking.svg?style=flat)](http://cocoapods.org/pods/JLXXNetWorking)
-[![Platform](https://img.shields.io/cocoapods/p/JLXXNetWorking.svg?style=flat)](http://cocoapods.org/pods/JLXXNetWorking)
+![License MIT](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)
+[![Platform](https://img.shields.io/badge/Platforms-iOS-4E4E4E.svg?colorA=28a745)](#installation)
 
 ## Example
 
@@ -73,13 +71,13 @@ pod 'JLXXNetWorking'
 
 ```objectivec
 
-@property (nonatomic , assign) BOOL isSometime;
+@property (nonatomic , assign) BOOL isRefresh;
 
- - (instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests sometimeRequests:(NSArray<JLXXRequest *> *)alwaysRequests;
+ - (instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests refreshRequests:(NSArray<JLXXRequest *> *)refreshRequests;
 
 }
 ```
-这里常见于一个页面有多个网络请求,下拉刷新的时候全部请求,上拉加载更多的时候,只加载某一个或几个请求,sometimesRequests里的request,在上拉加载时,不会请求
+这里常见于一个页面有多个网络请求,下拉刷新的时候全部请求,上拉加载更多的时候,只加载某一个或几个请求,refreshRequests里的request,在上拉加载时,不会请求
 ```objectivec
 {
 
@@ -96,7 +94,7 @@ pod 'JLXXNetWorking'
 		if ([batchRequest requestInSuccessRequestArray:bannerRequest]) {
 			bannerArray = [JLXXHomeBannerModel mj_objectArrayWithKeyValuesArray:banner.responseObject[@"data"]];
 			[self addData:@[bannerArray] inSection:0];
-		}else{//bannerArray没有数据,清空数据,因为是下拉刷新,如果没有数据,需要清空
+		}else if(self.isRefresh){//bannerArray没有数据,清空数据,因为是下拉刷新,如果没有数据,需要清空
 		[self addData:@[bannerArray] inSection:0];
 	}
 
@@ -104,7 +102,7 @@ pod 'JLXXNetWorking'
 	if ([batchRequest requestInSuccessRequestArray:termList]) {
 		termListArray = [JLXXHomeTermListModel mj_objectArrayWithKeyValuesArray:termList.responseObject[@"data"]];
 		[self addData:@[termListArray] inSection:1];
-	}else{//termListArray没有数据,清空数据,因为是下拉刷新,如果没有数据,需要清空
+	}else if(self.isRefresh){//termListArray没有数据,清空数据,因为是下拉刷新,如果没有数据,需要清空
 		[self addData:@[termListArray] inSection:1];
 	}
 
@@ -117,7 +115,7 @@ pod 'JLXXNetWorking'
 	[self addData:roomList inSection:2];
 
 	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
-		[super requestDidFaile];
+	
 	}];
 }
 ```

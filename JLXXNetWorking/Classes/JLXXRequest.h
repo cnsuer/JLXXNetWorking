@@ -28,64 +28,64 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const JLXXRequestValidationErrorDomain;
 
 NS_ENUM(NSInteger) {
-	JLXXRequestValidationErrorInvalidStatusCode = -8,
-	JLXXRequestValidationErrorInvalidJSONFormat = -9,
-	};
-	
-	///  HTTP Request method.
-	typedef NS_ENUM(NSInteger, JLXXRequestMethod) {
-		JLXXRequestMethodGET = 0,
-		JLXXRequestMethodPOST,
-	};
-	
-	///  Request serializer type.
-	typedef NS_ENUM(NSInteger, JLXXRequestSerializerType) {
-		JLXXRequestSerializerTypeHTTP = 0,
-		JLXXRequestSerializerTypeJSON,
-	};
-	
-	///  Response serializer type, which determines response serialization process and
-	///  the type of `responseObject`.
-	typedef NS_ENUM(NSInteger, JLXXResponseSerializerType) {
-		/// NSData type
-		JLXXResponseSerializerTypeHTTP,
-		/// JSON object type
-		JLXXResponseSerializerTypeJSON,
-		/// NSXMLParser type
-		JLXXResponseSerializerTypeXMLParser,
-	};
-	
-	///  Request priority
-	typedef NS_ENUM(NSInteger, JLXXRequestPriority) {
-		JLXXRequestPriorityLow = -4L,
-		JLXXRequestPriorityDefault = 0,
-		JLXXRequestPriorityHigh = 4,
-	};
-	
-	@class JLXXRequest;
-	@protocol AFMultipartFormData;
-	
-	typedef void (^AFConstructingBlock)(id<AFMultipartFormData> formData);
-	typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
-	typedef void(^JLXXRequestCompletionBlock)(__kindof JLXXRequest *request);
-	
-	///  The JLXXRequestDelegate protocol defines several optional methods you can use
-	///  to receive network-related messages. All the delegate methods will be called
-	///  on the main queue.
-	@protocol JLXXRequestDelegate <NSObject>
-	
-	@optional
-	///  Tell the delegate that the request has finished successfully.
-	///
-	///  @param request The corresponding request.
-	- (void)requestFinished:(__kindof JLXXRequest *)request;
-	
-	///  Tell the delegate that the request has failed.
-	///
-	///  @param request The corresponding request.
-	- (void)requestFailed:(__kindof JLXXRequest *)request;
-	
-	@end
+JLXXRequestValidationErrorInvalidStatusCode = -8,
+JLXXRequestValidationErrorInvalidJSONFormat = -9,
+};
+
+///  HTTP Request method.
+typedef NS_ENUM(NSInteger, JLXXRequestMethod) {
+	JLXXRequestMethodGET = 0,
+	JLXXRequestMethodPOST,
+};
+
+///  Request serializer type.
+typedef NS_ENUM(NSInteger, JLXXRequestSerializerType) {
+	JLXXRequestSerializerTypeHTTP = 0,
+	JLXXRequestSerializerTypeJSON,
+};
+
+///  Response serializer type, which determines response serialization process and
+///  the type of `responseObject`.
+typedef NS_ENUM(NSInteger, JLXXResponseSerializerType) {
+	/// NSData type
+	JLXXResponseSerializerTypeHTTP,
+	/// JSON object type
+	JLXXResponseSerializerTypeJSON,
+	/// NSXMLParser type
+	JLXXResponseSerializerTypeXMLParser,
+};
+
+///  Request priority
+typedef NS_ENUM(NSInteger, JLXXRequestPriority) {
+	JLXXRequestPriorityLow = -4L,
+	JLXXRequestPriorityDefault = 0,
+	JLXXRequestPriorityHigh = 4,
+};
+
+@class JLXXRequest;
+@protocol AFMultipartFormData;
+
+typedef void (^AFConstructingBlock)(id<AFMultipartFormData> formData);
+typedef void (^AFURLSessionTaskProgressBlock)(NSProgress *);
+typedef void(^JLXXRequestCompletionBlock)(__kindof JLXXRequest *request);
+
+///  The JLXXRequestDelegate protocol defines several optional methods you can use
+///  to receive network-related messages. All the delegate methods will be called
+///  on the main queue.
+@protocol JLXXRequestDelegate <NSObject>
+
+@optional
+///  Tell the delegate that the request has finished successfully.
+///
+///  @param request The corresponding request.
+- (void)requestFinished:(__kindof JLXXRequest *)request;
+
+///  Tell the delegate that the request has failed.
+///
+///  @param request The corresponding request.
+- (void)requestFailed:(__kindof JLXXRequest *)request;
+
+@end
 	
 ///  JLXXRequest is the abstract class of network request. It provides many options
 ///  for constructing request. It's the base class of `JLXXRequest`.
@@ -125,13 +125,6 @@ NS_ENUM(NSInteger) {
 @property (nonatomic, strong, readwrite, nullable) NSError *error;
 ///  If YES the  type of error is network error(server or net).
 @property (nonatomic, getter=isNetworkError) BOOL networkError;
-
-///  Return cancelled state of request task.
-@property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
-
-///  Executing state of request task.
-@property (nonatomic, readonly, getter=isExecuting) BOOL executing;
-
 
 #pragma mark - Delegate & CallBack & Download & Upload Configuration
 ///=============================================================================
@@ -250,15 +243,29 @@ NS_ENUM(NSInteger) {
  */
 @property (nonatomic , copy) NSArray *successStatusCode;
 /**
- 服务器响应数据的状态码的key ==>例如 code = 200 中的 code
+ 服务器响应数据的状态码的key ==>例如 {"code":200,"des":"success"} 中的 code
  默认是code
  */
 @property (nonatomic , copy) NSString *responseStatusCodeKey;
-
+/**
+ 服务器响应数据的状态描述的key ==>例如 {"code":200,"des":"success"} 中的 des
+ */
 @property (nonatomic , copy) NSString *responseDescriptionKey;
 
 ///  The response status code.
 @property (nonatomic, readonly) NSString *responseStatusCode;
+
+///  Return cancelled state of request task.
+@property (nonatomic, readonly, getter=isCancelled) BOOL cancelled;
+
+///  Executing state of request task.
+@property (nonatomic, readonly, getter=isExecuting) BOOL executing;
+
+/// 取消本次请求
+- (void)cancelRequest;
+
+/// 本次请求取消后,请求失败block,是否调用,默认NO
+- (BOOL)isCallBackWhenCancel;
 
 ///  This validator will be used to test if `responseStatusCode` is valid.
 - (BOOL)statusCodeValidator;

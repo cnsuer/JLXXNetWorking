@@ -311,10 +311,14 @@
 		succeed = [self validateResult:request error:&validationError];
 		requestError = validationError;
 	}
+	
+	BOOL isCallBackWhenCancel = request.isCancelled && [request isCallBackWhenCancel];
+	
 	if (succeed) {
 		[self requestDidSucceedWithRequest:request];
-	}
-	else {
+	}else if (isCallBackWhenCancel || !request.isCancelled){
+		//1:请求失败了,如果是自己取消的请求且需要回调,则调用请求失败方法,
+		//2:不是取消请求,导致的请求失败,需要调用请求失败方法
 		[self requestDidFailWithRequest:request error:requestError];
 	}
 	

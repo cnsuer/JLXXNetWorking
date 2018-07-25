@@ -14,6 +14,8 @@
 
 @property (nonatomic , assign) BOOL isRefresh;
 
+@property (nonatomic , strong) JLXXRequest *request;
+
 @end
 
 @implementation JLXXViewController
@@ -25,21 +27,26 @@
 
 }
 
+- (IBAction)buttonClick:(UIButton *)sender {
+	[self.request cancelRequest];
+	[self nomalRequest];
+}
+
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 	
-	[self request];
 	
 }
 
-- (void)request{
+- (void)nomalRequest{
 	[JLXXRequestConfig sharedInstance].responseStatusCodeKey = @"res_code";
 	[JLXXRequestConfig sharedInstance].responseDescriptionKey = @"res_msg";
 	[JLXXRequestConfig sharedInstance].successStatusCode = @[@"P001",@"200"];
 	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"http://api.wawa.kinlink.cn/V2/shangjia"];
+	self.request = re1;
 	[re1 startWithCompletionBlockWithSuccess:^(__kindof JLXXRequest * _Nonnull request) {
-		NSLog(@"success");
+		NSLog(@"success乐乐乐乐乐");
 	} failure:^(__kindof JLXXRequest * _Nonnull request) {
-		NSLog(@"faile");
+		NSLog(@"faile啊啊啊啊啊啊");
 	}];
 }
 
