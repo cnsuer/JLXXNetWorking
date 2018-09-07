@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const JLXXRequestValidationErrorDomain;
 
 NS_ENUM(NSInteger) {
-JLXXRequestValidationErrorInvalidStatusCode = -8,
-JLXXRequestValidationErrorInvalidJSONFormat = -9,
+	JLXXRequestValidationErrorInvalidStatusCode = -8,
+	JLXXRequestValidationErrorInvalidJSONFormat = -9,
 };
 
 ///  HTTP Request method.
@@ -86,7 +86,7 @@ typedef void(^JLXXRequestCompletionBlock)(__kindof JLXXRequest *request);
 - (void)requestFailed:(__kindof JLXXRequest *)request;
 
 @end
-	
+
 ///  JLXXRequest is the abstract class of network request. It provides many options
 ///  for constructing request. It's the base class of `JLXXRequest`.
 @interface JLXXRequest : NSObject
@@ -199,8 +199,11 @@ typedef void(^JLXXRequestCompletionBlock)(__kindof JLXXRequest *request);
 
 ///  Additional request argument.
 @property (nonatomic , strong) id requestParam;
-///extraParam
-@property (nonatomic , strong) id extraParam;
+/**
+ replaceParam,替换config的默认参数,
+ 例如config.defaultParam中的token是1,但是在指定的request中token需要是2
+ */
+@property (nonatomic , strong) NSDictionary *replaceParam;
 /// ignore paramKeys in requestParam
 - (nullable NSArray<NSString *> *)ignoreParams;
 ///  The priority of the request. Effective only on iOS 8+. Default is `JLXXRequestPriorityDefault`.
@@ -288,4 +291,4 @@ typedef void(^JLXXRequestCompletionBlock)(__kindof JLXXRequest *request);
 	
 NS_ASSUME_NONNULL_END
 	
-
+	

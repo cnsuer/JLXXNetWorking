@@ -34,7 +34,7 @@
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
 	
-	
+	[self batch];
 }
 
 - (void)nomalRequest{
@@ -76,15 +76,20 @@
 	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/33"];
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];
 	
-	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] refreshRequests:@[re1]];
-	batch.isRefresh = self.isRefresh;
+	JLXXBatchRequest *batch = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[re4,re3,re2] refreshRequests:@[re1] isRefresh: self.isRefresh];
 	
-	[batch startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
-		NSLog(@"%@",batchRequest.successRequests);
-		NSLog(@"%@",batchRequest.failedRequests);
-	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
+	[batch startWithCompletionBlockWithCallBack:^(JLXXBatchRequest * _Nonnull batchRequest) {
+		NSLog(@"----------startWithCompletionBlockWithSuccess----------------");
+		NSLog(@"successRequests.count %lu",batchRequest.successRequests.count);
+		NSLog(@"failedRequests.count %lu",batchRequest.failedRequests.count);
+		NSLog(@"----------startWithCompletionBlockWithSuccess----------------");
+	} allRequestFailure:^(JLXXBatchRequest * _Nonnull batchRequest) {
+		NSLog(@"----------startWithCompletionBlockWithFaile----------------");
 		NSLog(@"all Request 失败");
-		NSLog(@"%@",[NSThread currentThread]);
+		NSLog(@"requests.count %lu",batchRequest.requestArray.count);
+		NSLog(@"failedRequests.count %lu",batchRequest.failedRequests.count);
+		NSLog(@"currentThread: %@",[NSThread currentThread]);
+		NSLog(@"----------startWithCompletionBlockWithFaile----------------");
 	}];
 }
 

@@ -81,13 +81,15 @@
 	return self;
 }
 
--(instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests refreshRequests:(NSArray<JLXXRequest *> *)refreshRequests{
+-(instancetype)initWithAlwaysRequests:(NSArray<JLXXRequest *> *)alwaysRequests refreshRequests:(NSArray<JLXXRequest *> *)refreshRequests isRefresh:(BOOL)isRefresh{
 	if (self = [super init]) {
 		
-		_refreshRequests = [refreshRequests copy];
-		
 		_requestArray = [alwaysRequests mutableCopy];
-		[_requestArray addObjectsFromArray:refreshRequests];
+		
+		if (isRefresh) {
+			_refreshRequests = [refreshRequests copy];
+			[_requestArray addObjectsFromArray:refreshRequests];
+		}
 		
 		_finishedCount = 0;
 		for (JLXXRequest * request in _requestArray) {
@@ -116,18 +118,7 @@
 	pthread_mutex_init(&_lock, NULL);
 	
 	[[JLXXBatchRequestManager sharedInstance] addBatchRequest:self];
-	
-	//不是Refresh,且refreshRequests有值
-	if (!self.isRefresh && _refreshRequests.count>0) {
-		__weak typeof(self) ws = self;
-		[_requestArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(JLXXRequest * _Nonnull request, NSUInteger idx, BOOL * _Nonnull stop) {
-			//需要删除不执行的requests
-			if ([ws.refreshRequests containsObject:request]) {
-				[ws.requestArray removeObject:request];
-			}
-		}];
-	}
-	
+
 	for (JLXXRequest * request in _requestArray) {
 		request.delegate = self;
 		[request clearCompletionBlock];
@@ -135,15 +126,15 @@
 	}
 }
 
-- (void)startWithCompletionBlockWithSuccess:(void (^)(JLXXBatchRequest *batchRequest))success
-									failure:(void (^)(JLXXBatchRequest *batchRequest))failure {
-	[self setCompletionBlockWithSuccess:success failure:failure];
+- (void)startWithCompletionBlockWithCallBack:(void (^)(JLXXBatchRequest *batchRequest))callBack
+									allRequestFailure:(void (^)(JLXXBatchRequest *batchRequest))failure {
+	[self setCompletionBlockWithCallBack:callBack allRequestFailure:failure];
 	[self start];
 }
 
-- (void)setCompletionBlockWithSuccess:(void (^)(JLXXBatchRequest *batchRequest))success
-							  failure:(void (^)(JLXXBatchRequest *batchRequest))failure {
-	self.successCompletionBlock = success;
+- (void)setCompletionBlockWithCallBack:(void (^)(JLXXBatchRequest *batchRequest))callBack
+							  allRequestFailure:(void (^)(JLXXBatchRequest *batchRequest))failure {
+	self.completionBlock = callBack;
 	self.failureCompletionBlock = failure;
 }
 - (void)stop {
@@ -158,7 +149,7 @@
 
 - (void)clearCompletionBlock {
 	// nil out to break the retain cycle.
-	self.successCompletionBlock = nil;
+	self.completionBlock = nil;
 	self.failureCompletionBlock = nil;
 	
 	//clearRequest
@@ -168,6 +159,9 @@
 	_requestArray = nil;
 }
 
+-(BOOL)isRefresh {
+	return _refreshRequests.count > 0 ? YES : NO ;
+}
 -(BOOL)requestInRefreshRequestsArray:(JLXXRequest *)request{
 	return [self request:request inRequestArray:_refreshRequests];
 }
@@ -222,8 +216,8 @@
 		});
 	}else {
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if (ws.successCompletionBlock) {
-				ws.successCompletionBlock(ws);
+			if (ws.completionBlock) {
+				ws.completionBlock(ws);
 			}
 		});
 	}

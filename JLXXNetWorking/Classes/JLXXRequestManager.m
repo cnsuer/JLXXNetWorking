@@ -109,10 +109,10 @@
 	}else{
 		param = [param mutableCopy];
 	}
-	//extra 参数
-	[param setValuesForKeysWithDictionary:request.extraParam];
 	//添加默认参数
 	[param setValuesForKeysWithDictionary:_config.defaultParam];
+	//替换默认 参数
+	[param setValuesForKeysWithDictionary:request.replaceParam];
 	//需要忽略的参数
 	NSArray *ignoreParams = [request ignoreParams];
 	for (NSString *key in ignoreParams) {

@@ -85,10 +85,9 @@ pod 'JLXXNetWorking'
 	JLXXHomeTermListTequest *termList = [[JLXXHomeTermListTequest alloc] init];
 	JLXXHomeGetLiveRequest *getLive = [[JLXXHomeGetLiveRequest alloc] init];
 
-	JLXXBatchRequest *batchRequest = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[getLive] refreshRequests:@[bannerRequest,termList]];
-	batchRequest.isRefresh = self.isRefresh;
+	JLXXBatchRequest *batchRequest = [[JLXXBatchRequest alloc] initWithAlwaysRequests:@[getLive] refreshRequests:@[bannerRequest,termList] isRefresh: self.isRefresh];
 	
-	[batchRequest startWithCompletionBlockWithSuccess:^(JLXXBatchRequest * _Nonnull batchRequest) {
+	[batchRequest startWithCompletionBlockWithCallBack:^(JLXXBatchRequest * _Nonnull batchRequest) {
 
 		NSArray *bannerArray = [NSArray array];
 		if ([batchRequest requestInSuccessRequestArray:bannerRequest]) {
@@ -114,7 +113,7 @@ pod 'JLXXNetWorking'
 	}
 	[self addData:roomList inSection:2];
 
-	} failure:^(JLXXBatchRequest * _Nonnull batchRequest) {
+	} allRequestFailure:^(JLXXBatchRequest * _Nonnull batchRequest) {
 	
 	}];
 }
