@@ -18,6 +18,7 @@ typedef NS_ENUM(NSInteger, JLXXNetworkReachabilityStatus) {
 
 FOUNDATION_EXPORT NSString * const JLXXNetworkingReachabilityDidChangeNotification;
 FOUNDATION_EXPORT NSString * const JLXXNetworkingReachabilityNotificationStatusItem;
+FOUNDATION_EXPORT NSString * const JLXXNetworkingUnauthorizedNotification;
 
 @class AFSecurityPolicy;
 
@@ -65,12 +66,19 @@ FOUNDATION_EXPORT NSString * const JLXXNetworkingReachabilityNotificationStatusI
 /**
  网络请求成功的状态码
  */
-@property (nonatomic , strong) NSArray * successStatusCode;
-
+@property (nonatomic , strong) NSArray *successStatusCode;
 /**
  网络请求结束的描述信息key
  */
 @property (nonatomic , copy) NSString *responseDescriptionKey;
+/**
+ 网络请求失败,原因为Unauthorized状态码,此时会发送一个通知,业务具体处理
+ Unauthorized出现的情况:
+ 1:登录的token过期
+ 2:账户被禁用
+ 等情况
+ */
+@property (nonatomic , strong) NSArray<NSString *> *unauthorizedCodes;
 
 /**
  是否加密

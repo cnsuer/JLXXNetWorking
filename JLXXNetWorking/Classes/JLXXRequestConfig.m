@@ -14,8 +14,10 @@
 #import "AFNetworking.h"
 #endif
 
-NSString * const JLXXNetworkingReachabilityDidChangeNotification = @"com.deerlive.networking.reachability.change";
+NSString * const JLXXNetworkingReachabilityDidChangeNotification = @"cn.com.kinlink.networking.reachability.change";
 NSString * const JLXXNetworkingReachabilityNotificationStatusItem = @"JLXXNetworkingReachabilityNotificationStatusItem";
+
+NSString * const JLXXNetworkingUnauthorizedNotification = @"cn.com.kinlink.networking.unauthorized";
 
 @implementation JLXXRequestConfig{
 	NSMutableDictionary *_defaultParam;

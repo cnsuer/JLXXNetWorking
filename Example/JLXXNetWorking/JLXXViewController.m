@@ -72,7 +72,7 @@
 
 	
 	JLXXRequest *re1 = [[JLXXRequest alloc] initWithRequestUrl:@"/Api/SiSi/is_shangjia"];
-	JLXXRequest *re2 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/22"];
+	JLXXRequest *re2 = [[JLXXRequest alloc] initWithRequestUrl:@"https://wallet.kinlink.cn/api/exchange/market"];
 	JLXXRequest *re3 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/33"];
 	JLXXRequest *re4 = [[JLXXRequest alloc] initWithRequestUrl:@"/api/44"];
 	

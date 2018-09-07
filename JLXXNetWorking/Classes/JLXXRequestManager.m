@@ -386,13 +386,27 @@
 }
 
 - (void)requestDidFailWithRequest:(JLXXRequest *)request error:(NSError *)error {
+	
 	request.error = error;
+	
+	NSString *responseStatusCode = request.responseStatusCode;
+	NSArray *unauthorizedCodes = [JLXXRequestConfig sharedInstance].unauthorizedCodes;
+	BOOL isSendNoti = NO;
+	for (NSString *code in unauthorizedCodes) {
+		if ([responseStatusCode isEqualToString:code]) { isSendNoti = YES; break; }
+	}
+
 	dispatch_queue_t completionQueue;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu"
 	completionQueue = request.completionQueue ?: dispatch_get_main_queue();
 #pragma clang diagnostic pop
 	dispatch_async(completionQueue, ^{
+		
+		if (isSendNoti) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:JLXXNetworkingUnauthorizedNotification object:nil userInfo:@{@"code":responseStatusCode}];
+		}
+		
 		if (request.delegate != nil) {
 			[request.delegate requestFailed:request];
 		}
