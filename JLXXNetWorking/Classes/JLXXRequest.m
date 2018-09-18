@@ -134,6 +134,11 @@ NSString *const JLXXRequestValidationErrorDomain = @"com.deerlive.request.valida
 - (BOOL)isCallBackWhenCancel{
 	return NO;
 }
+
+- (BOOL)sendNotifcationWhenUnauthorized {
+	return YES;
+}
+
 - (BOOL)statusCodeValidator {
 	NSString *statusCode = [self responseStatusCode];
 	NSArray *successStatusCode = [self successStatusCode];

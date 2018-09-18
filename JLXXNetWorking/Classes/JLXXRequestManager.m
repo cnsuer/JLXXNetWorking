@@ -390,10 +390,14 @@
 	request.error = error;
 	
 	NSString *responseStatusCode = request.responseStatusCode;
-	NSArray *unauthorizedCodes = [JLXXRequestConfig sharedInstance].unauthorizedCodes;
 	BOOL isSendNoti = NO;
-	for (NSString *code in unauthorizedCodes) {
-		if ([responseStatusCode isEqualToString:code]) { isSendNoti = YES; break; }
+	
+	/// 为需要发送的通知的请求,发送通知
+	if ([request sendNotifcationWhenUnauthorized]) {
+		NSArray *unauthorizedCodes = [JLXXRequestConfig sharedInstance].unauthorizedCodes;
+		for (NSString *code in unauthorizedCodes) {
+			if ([responseStatusCode isEqualToString:code]) { isSendNoti = YES; break; }
+		}
 	}
 
 	dispatch_queue_t completionQueue;

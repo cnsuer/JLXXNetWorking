@@ -204,8 +204,16 @@ typedef void(^JLXXRequestCompletionBlock)(__kindof JLXXRequest *request);
  例如config.defaultParam中的token是1,但是在指定的request中token需要是2
  */
 @property (nonatomic , strong) NSDictionary *replaceParam;
+
 /// ignore paramKeys in requestParam
 - (nullable NSArray<NSString *> *)ignoreParams;
+
+/// 当错误原因是没有授权(例如过期时)
+/// 不发送通知(当JLXXRequestConfig的UnauthorizedCodes是当前请求的错误状态码时,会发送通知)
+/// 弹出登录页面等UI操作
+/// 默认YES
+- (BOOL)sendNotifcationWhenUnauthorized;
+
 ///  The priority of the request. Effective only on iOS 8+. Default is `JLXXRequestPriorityDefault`.
 @property (nonatomic) JLXXRequestPriority requestPriority;
 
