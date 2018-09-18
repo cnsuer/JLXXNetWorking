@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///  Tell the delegate that the chain request has finished successfully.
 ///
 ///  @param chainRequest The corresponding chain request.
-- (void)chainRequestFinished:(JLXXChainRequest *)chainRequest;
+- (void)chainRequestFinished:(JLXXChainRequest *)chainRequest finishedRequest:(JLXXRequest*)request;
 
 ///  Tell the delegate that the chain request has failed.
 ///
